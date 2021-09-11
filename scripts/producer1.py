@@ -25,7 +25,7 @@ producer = KafkaProducer(bootstrap_servers=[local_boostrap_server_address],
 def get_text_corpus():
     df = pd.read_csv(cloud_csv_file_data_path)
     while True:
-        n = random.randint(0,5159483)
+        n = random.randint(0,9483)
         data = df.iloc[n]["sentence"]
         print(data)
         producer.send("topic0001", {'data': data})
