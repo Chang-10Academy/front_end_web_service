@@ -10,12 +10,14 @@ sys.path.append(os.path.abspath(os.path.join('../front-end-service')))
 
 app = Flask(__name__)
 redis = Redis(host='redis', port=6379)
+a = 0
 try:
     consumer = KafkaConsumer(
                     "topic0001",
                     bootstrap_servers=local_boostrap_server_address,
                     auto_offset_reset='latest',
                     group_id="consumer-group-a")
+    a=1
 
 except:
     pass
@@ -24,7 +26,7 @@ except:
 def home():
     if request.method == "GET":
         e = ""
-        if (consumer):
+        if (a==1):
             try:
                 for msg in consumer:
                     print("Registered User = {}".format(json.loads(msg.value)))
