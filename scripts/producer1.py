@@ -4,7 +4,7 @@ import math, time
 from kafka import KafkaProducer
 import json
 
-local_boostrap_server_address = 'localhost:9093'
+local_boostrap_server_address = 'localhost:9092'
 cloud_data_path = '/mnt/10ac-batch-4/all-data/transcriptions/Amharic_transcriptions/Clean_Amharic.txt'
 cloud_csv_file_data_path = '/mnt/10ac-batch-4/all-data/transcriptions/Chang_transcriptions_csv/processed.csv'
 cloud_data_lake_path = '/mnt/10ac-batch-4/all-data/Chang/'
@@ -32,4 +32,5 @@ def get_text_corpus():
         time.sleep(2)
 
 
-get_text_corpus()
+if __name__ == "__main__":
+    get_text_corpus()
