@@ -24,6 +24,7 @@ def get_text_corpus():
         print("starting the consumer")
         for msg in consumer:
             data_received = json.loads(msg.value)
+            break
 
 
     else:
@@ -39,6 +40,7 @@ def get_text_corpus():
             print("starting the consumer")
             for msg in consumer:
                 data_received = json.loads(msg.value)
+                break
 
         except:
             data_received = "Refresh the page to get a Text"
