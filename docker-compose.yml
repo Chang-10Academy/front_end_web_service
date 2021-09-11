@@ -9,6 +9,6 @@ services:
     ports: 
       - "5000:5000"
     volumes: 
-      - .:/data_collection
+      - .:/front_end_web_service
     depends_on: 
       - redis
