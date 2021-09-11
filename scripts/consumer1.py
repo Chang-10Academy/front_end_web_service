@@ -49,11 +49,5 @@ def get_text_corpus():
 
 
 if __name__ == "__main__":
-    consumer = KafkaConsumer(
-        "topic0001",
-        bootstrap_servers=local_boostrap_server_address,
-        auto_offset_reset='latest',
-        group_id="consumer-group-a")
-    print("starting the consumer")
-    for msg in consumer:
-        print("Registered User = {}".format(json.loads(msg.value)))
+    consumer = get_text_corpus()
+    print(consumer)
