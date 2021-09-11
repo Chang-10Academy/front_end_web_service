@@ -10,11 +10,15 @@ sys.path.append(os.path.abspath(os.path.join('../front-end-service')))
 
 app = Flask(__name__)
 redis = Redis(host='redis', port=6379)
-consumer = KafkaConsumer(
-                "topic0001",
-                bootstrap_servers=local_boostrap_server_address,
-                auto_offset_reset='latest',
-                group_id="consumer-group-a")
+try:
+    consumer = KafkaConsumer(
+                    "topic0001",
+                    bootstrap_servers=local_boostrap_server_address,
+                    auto_offset_reset='latest',
+                    group_id="consumer-group-a")
+
+except:
+    pass
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
