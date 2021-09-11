@@ -24,15 +24,32 @@ except:
 def home():
     if request.method == "GET":
         e = ""
-        try:
-            for msg in consumer:
-                print("Registered User = {}".format(json.loads(msg.value)))
-                data_received = json.loads(msg.value)
-                break
-        except Exception as e:
-            print(e)
-            data_received = "Nothing received"
-        # redis.incr('hits') count=redis.get('hits'),
+        if (consumer):
+            try:
+                for msg in consumer:
+                    print("Registered User = {}".format(json.loads(msg.value)))
+                    data_received = json.loads(msg.value)
+                    break
+            except Exception as e:
+                print(e)
+                data_received = "Nothing received"
+            # redis.incr('hits') count=redis.get('hits'),
+        
+        else:
+            try:
+                consumer = KafkaConsumer(
+                                "topic0001",
+                                bootstrap_servers=local_boostrap_server_address,
+                                auto_offset_reset='latest',
+                                group_id="consumer-group-a")
+                for msg in consumer:
+                    print("Registered User = {}".format(json.loads(msg.value)))
+                    data_received = json.loads(msg.value)
+                    break
+
+            except:
+                pass
+
         
         return render_template("index.html", 
                                 count=5, 
