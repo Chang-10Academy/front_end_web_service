@@ -2,10 +2,10 @@ from flask import Flask, send_from_directory
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit
 from kafka import KafkaProducer, KafkaConsumer, TopicPartition
-import uuid
+import uuid, json
 import os, sys
 
-sys.path.append(os.path.abspath(os.path.join('../scripts')))
+# sys.path.append(os.path.abspath(os.path.join('../scripts')))
 from consumer1 import GetText
 
 app = Flask(__name__)
@@ -27,7 +27,7 @@ def home():
 
 @socketio.on('connect', namespace='/kafka')
 def test_connect():
-    data = GetText.get_text_corpus()
+    data = get_text_corpus()
     emit('logs', {'data': data})
 
 
@@ -62,6 +62,26 @@ def kafkaproducer(message):
     producer.close()
     kafkaconsumer(message)
 
+
+def get_text_corpus():
+    try:
+        consumer = KafkaConsumer(
+                        "topic0001",
+                        bootstrap_servers=BOOTSTRAP_SERVERS,
+                        auto_offset_reset='latest',
+                        group_id="consumer-group-a")
+
+        a=1
+
+        print("starting the consumer")
+        for msg in consumer:
+            data_received = json.loads(msg.value)
+            break
+        consumer.commit()
+        consumer.stop()
+
+    except:
+        data_received = "Refresh the page to get a Text"
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000)
