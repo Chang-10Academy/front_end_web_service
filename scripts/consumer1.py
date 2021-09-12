@@ -1,6 +1,7 @@
+# from os import wait
 from kafka import KafkaConsumer
 import json
-import asyncio
+# import asyncio
 
 local_boostrap_server_address = 'localhost:9092'
 
@@ -20,7 +21,7 @@ except:
 class GetText():
 
     
-    async def get_text_corpus():
+    def get_text_corpus():
         global a, consumer
         if (a==1):
             print("starting the consumer")
@@ -33,7 +34,7 @@ class GetText():
 
         else:
             try:
-                consumer = await KafkaConsumer(
+                consumer = KafkaConsumer(
                                 "topic0001",
                                 bootstrap_servers=local_boostrap_server_address,
                                 auto_offset_reset='latest',

@@ -1,8 +1,8 @@
 # compose_flask/app.py
 import asyncio
 from flask import Flask, render_template, request, redirect, jsonify
-from flask_cors import CORS
-from redis import Redis
+# from flask_cors import CORS
+# from redis import Redis
 import os, sys, json
 
 
@@ -11,17 +11,17 @@ from consumer1 import GetText
 
 
 app = Flask(__name__)
-redis = Redis(host='redis', port=6379)
+# redis = Redis(host='redis', port=6379)
 
 @app.route('/', methods=['GET', 'POST'])
-async def home():
+def home():
     if request.method == "GET":
         e = ""
-        data_received = await GetText.get_text_corpus()
-        redis.incr('hits')
+        data_received = GetText.get_text_corpus()
+        # redis.incr('hits')
         
         return render_template("index.html", 
-                                count=redis.get('hits'), 
+                                count=1, 
                                 text_corpus=data_received,
                                 debg="e")
 
