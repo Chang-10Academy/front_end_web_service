@@ -3,6 +3,10 @@ from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit
 from kafka import KafkaProducer, KafkaConsumer, TopicPartition
 import uuid
+import os, sys
+
+sys.path.append(os.path.abspath(os.path.join('../scripts')))
+from consumer1 import GetText
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -23,7 +27,8 @@ def home():
 
 @socketio.on('connect', namespace='/kafka')
 def test_connect():
-    emit('logs', {'data': 'Connection established'})
+    data = GetText.get_text_corpus()
+    emit('logs', {'data': data})
 
 
 @socketio.on('kafkaconsumer', namespace="/kafka")
