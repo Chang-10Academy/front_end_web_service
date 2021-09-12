@@ -2,3 +2,5 @@ flask
 redis
 kafka-python
 pandas
+flask_cors
+Flask[async]

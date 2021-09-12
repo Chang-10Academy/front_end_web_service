@@ -1,5 +1,6 @@
 from kafka import KafkaConsumer
 import json
+import asyncio
 
 local_boostrap_server_address = 'localhost:9092'
 
@@ -19,18 +20,20 @@ except:
 class GetText():
 
     
-    def get_text_corpus():
+    async def get_text_corpus():
         global a, consumer
         if (a==1):
             print("starting the consumer")
             for msg in consumer:
                 data_received = json.loads(msg.value)
                 break
+            consumer.commit()
+            consumer.stop()
 
 
         else:
             try:
-                consumer = KafkaConsumer(
+                consumer = await KafkaConsumer(
                                 "topic0001",
                                 bootstrap_servers=local_boostrap_server_address,
                                 auto_offset_reset='latest',
@@ -42,6 +45,8 @@ class GetText():
                 for msg in consumer:
                     data_received = json.loads(msg.value)
                     break
+                consumer.commit()
+                consumer.stop()
 
             except:
                 data_received = "Refresh the page to get a Text"
