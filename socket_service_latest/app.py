@@ -21,9 +21,9 @@ TOPIC_NAME = 'topic0001'
 @cross_origin()
 def home():
 
-    # dataRx = get_data()
-    
-    return render_template("index.html", datarx="dataRx")
+    dataRx = get_data()
+    # kafkaconsumer()
+    return render_template("index.html", datarx=dataRx)
 
 """ Kafka endpoints """
 
@@ -32,39 +32,13 @@ def home():
 def test_connect():
     data = "Ethan connected"
     emit('logs', {'data': data})
-    # kafkaconsumer()
-    # dataRx = dataRx = get_data()
-    # emit('logs', dataRx)
+    kafkaconsumer()
 
 
 @socketio.on('kafkaconsumer', namespace="/kafka")
 def kafkaconsumer():
-    message = "Mimi"
-    emit('kafkaconsumer', {'data': '????'})
-
-    consumer = KafkaConsumer(
-                             bootstrap_servers=BOOTSTRAP_SERVERS,
-                             group_id="consumer-group-a",
-                             enable_auto_commit = True,
-                             request_timeout_ms = 11000,
-                             consumer_timeout_ms=2000
-                             )
-
-    tp = TopicPartition(TOPIC_NAME, 0)
-    # register to the topic
-    print ("msg")
-    consumer.assign([tp])
-
-    # obtain the last offset value
-    consumer.seek_to_end(tp)
-    lastOffset = consumer.position(tp)
-    consumer.seek_to_beginning(tp)
-    emit('kafkaconsumer1', {'data': '>>>'})
-    for message in consumer:
-        emit('kafkaconsumer', {'data': message})
-        if message.offset == lastOffset - 1:
-            break
-    consumer.close()
+    message1 = get_data()
+    emit('kafkaconsumer1', message1)
 
 
 @socketio.on('kafkaproducer', namespace="/kafka")
@@ -84,23 +58,22 @@ def json_serializer(data):
     return json.dumps(data).encode("utf-8")
 
 def get_data():
-        data_received = "nothing here"
-        consumer = KafkaConsumer(
-                                "topic0001",
-                                bootstrap_servers=BOOTSTRAP_SERVERS,
-                                auto_offset_reset='latest',
-                                enable_auto_commit = True,
-                                consumer_timeout_ms=2000,
-                                group_id="consumer-group-a")
+    message1 = "Refresh the page to get the Translation"
+    consumer = KafkaConsumer('topic0001',
+                        group_id='my-group5',
+                        bootstrap_servers=['localhost:9092'])
+    messages = consumer.poll(timeout_ms=1000,max_records=1)
 
-        print("starting the consumer")
-        for msg in consumer:
-            data_received = json.loads(msg.value)
-            print('data_received')
-            print(data_received)
-            break
+    for tp, mess in messages.items():
+        message=mess[0]
+        print ("%s:%d:%d: key=%s value=%s" % (tp.topic, tp.partition,
+                                            message.offset, message.key,
+                                            message.value.decode('utf-8')))
 
-        return data_received
+        message1 = message.value.decode('utf-8')
+
+    return message1
+
 
 if __name__ == '__main__':
     socketio.run(app)
