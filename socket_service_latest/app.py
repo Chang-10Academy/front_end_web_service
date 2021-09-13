@@ -6,7 +6,7 @@ import uuid, json
 import os, sys
 
 # sys.path.append(os.path.abspath(os.path.join('../scripts')))
-from consumer1 import GetText
+# from consumer1 import GetText
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -21,9 +21,9 @@ TOPIC_NAME = 'topic0001'
 @cross_origin()
 def home():
 
-    dataRx = get_data()
+    # dataRx = get_data()
     
-    return render_template("index.html", datarx=dataRx)
+    return render_template("index.html", datarx="dataRx")
 
 """ Kafka endpoints """
 
@@ -33,8 +33,8 @@ def test_connect():
     data = "Ethan connected"
     emit('logs', {'data': data})
     # kafkaconsumer()
-    dataRx = dataRx = get_data()
-    emit('logs', dataRx)
+    # dataRx = dataRx = get_data()
+    # emit('logs', dataRx)
 
 
 @socketio.on('kafkaconsumer', namespace="/kafka")
