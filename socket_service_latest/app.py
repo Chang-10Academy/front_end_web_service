@@ -21,7 +21,7 @@ TOPIC_NAME = 'topic0001'
 @cross_origin()
 def home():
 
-    dataRx = GetText.get_data()
+    dataRx = get_data()
     
     return render_template("index.html", datarx=dataRx)
 
@@ -33,8 +33,8 @@ def test_connect():
     data = "Ethan connected"
     emit('logs', {'data': data})
     # kafkaconsumer()
-    # dataRx = GetText.get_data()
-    # emit('logs', dataRx)
+    dataRx = dataRx = get_data()
+    emit('logs', dataRx)
 
 
 @socketio.on('kafkaconsumer', namespace="/kafka")
@@ -83,25 +83,24 @@ def kafkaproducer(message):
 def json_serializer(data):
     return json.dumps(data).encode("utf-8")
 
-def get_text_corpus():
-    try:
+def get_data():
+        data_received = "nothing here"
         consumer = KafkaConsumer(
-                        "topic0001",
-                        bootstrap_servers=BOOTSTRAP_SERVERS,
-                        auto_offset_reset='latest',
-                        group_id="consumer-group-a")
-
-        a=1
+                                "topic0001",
+                                bootstrap_servers=BOOTSTRAP_SERVERS,
+                                auto_offset_reset='latest',
+                                enable_auto_commit = True,
+                                consumer_timeout_ms=2000,
+                                group_id="consumer-group-a")
 
         print("starting the consumer")
         for msg in consumer:
             data_received = json.loads(msg.value)
+            print('data_received')
+            print(data_received)
             break
-        consumer.commit()
-        consumer.stop()
 
-    except:
-        data_received = "Refresh the page to get a Text"
+        return data_received
 
 if __name__ == '__main__':
     socketio.run(app)

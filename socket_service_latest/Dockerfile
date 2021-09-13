@@ -1,5 +1,5 @@
 FROM python:3.7
-COPY index.html /app/
+COPY templates/index.html /app/
 COPY requirements.txt /app/
 COPY app.py /app/
 WORKDIR /app
